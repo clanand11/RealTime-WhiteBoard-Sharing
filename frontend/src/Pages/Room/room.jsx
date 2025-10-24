@@ -1,11 +1,23 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import "./Room.css"
 import WhiteBoard from "../../Components/WhiteBoard/whiteBoard";
 
 const Room = () => {
 
-   const [tool,setTool] = useState("pencil"); 
-   const [color,setColor] = useState("black"); 
+    const canvasRef = useRef(null); 
+    const cntxtRef = useRef(null); 
+
+    const [tool,setTool] = useState("pencil"); 
+    const [color,setColor] = useState("black"); 
+    const [elements, setElements] = useState([]);
+
+    const handleClearCanvas = () => {
+        const canvas = canvasRef.current;
+        const cntxt = canvas.getContext("2d");
+        cntxt.fillRect = "white";
+        cntxt.clearRect(0,0,canvasRef.current.width,canvasRef.current.height);
+        setElements([]);
+    }
 
   return (
     <div className="row ">
@@ -36,11 +48,11 @@ const Room = () => {
                 <button className="btn btn-primary"> Redo</button>
             </div>
             <div className="col-md-3">
-                <button className="btn btn-danger">Clear Canvas</button>
+                <button className="btn btn-danger" onClick={handleClearCanvas}>Clear Canvas</button>
             </div>
         </div>
         <div className="col-md-10">
-            <WhiteBoard/>
+            <WhiteBoard canvasRef={canvasRef} cntxtRef={cntxtRef} elements={elements} setElements={setElements} color={color} tool={tool}/>
         </div>
         
     </div>
