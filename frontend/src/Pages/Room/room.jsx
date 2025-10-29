@@ -1,16 +1,17 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import "./Room.css"
 import WhiteBoard from "../../Components/WhiteBoard/whiteBoard";
 
-const Room = ({user, socket}) => {
+const Room = ({user, socket, users}) => {
 
     const canvasRef = useRef(null); 
     const cntxtRef = useRef(null); 
 
     const [tool,setTool] = useState("pencil"); 
-    const [color,setColor] = useState("black"); 
+    const [color,setColor] = useState("#000000"); 
     const [elements, setElements] = useState([]);
     const [history, setHistory] = useState([]);
+    const [openUserTab, setOpenUserTab] = useState(false); 
 
     const handleClearCanvas = () => {
         const canvas = canvasRef.current;
@@ -34,7 +35,31 @@ const Room = ({user, socket}) => {
 
   return (
     <div className="row ">
-        <h1 className="text-center py-5">White Board App <span className="text-primary"> [Users Online : 0]</span></h1>
+        <button type="button" className="btn btn-dark" onClick={() => setOpenUserTab(true)} style={{
+            display: "block",
+            position: "absolute",
+            top : "5%",
+            left : "5%",
+            height : "40px",
+            width : "100px"
+        }}>Users</button>
+        {
+            openUserTab && (
+                <div className="position-fixed top-0 left-0 h-100 text-white bg-dark" style={{width: "250px", left: "0%"}}>
+                    <button type="button" className="btn btn-light btn-block w-100 mt-5" onClick={() => setOpenUserTab(false)}>Close</button>
+                    <div className="w-100 mt-5 pt-5">
+                    {
+                        users.map((usr,index) => (
+                            <p key={index * 999} className="my-2 w-100 text-center">
+                                {usr.name} {user && user.userId == usr.userId && "(You)"}
+                            </p>
+                        ))
+                    }
+                    </div>
+                </div>
+            )
+        }
+        <h1 className="text-center py-5">White Board App <span className="text-primary"> [Users Online : {users.length}]</span></h1>
         {
             user && user.presenter && (
                 <div className="d-flex justify-content-center align-items-around ">

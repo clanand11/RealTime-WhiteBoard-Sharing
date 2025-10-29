@@ -8,7 +8,7 @@ const WhiteBoard = ({canvasRef, cntxtRef, elements, setElements, tool, color, us
     const [img,setImg] =useState(null);
 
     useEffect(() => {
-        socket.on("whiteBoardDataRespone", (data) => {
+        socket.on("whiteBoardDataResponse", (data) => {
             setImg(data.imgURL);
         })
     },[])
@@ -16,7 +16,11 @@ const WhiteBoard = ({canvasRef, cntxtRef, elements, setElements, tool, color, us
     if(!user?.presenter ){
         return (
             <div className="border border-dark border-3 h-100 w-100 overflow-hidden">
-             <img src={img} alt="Real time white board" className="w-100 h-100"/>
+             <img src={img} alt="Real time white board" /*className="w-100 h-100"*/ 
+             style={{
+                height : window.innerHeight * 2,
+                width: "285%"
+             }}/>
             </div>
         )
     }
